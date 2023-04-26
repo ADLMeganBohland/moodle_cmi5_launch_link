@@ -501,18 +501,8 @@ class progress{
 			$currentLmsId = $singleStatment[$regId][0]["object"]["id"];
 			
 			 
-		}
-		//The results come back as nested array under more then statments. We only want statements, and we want them separated into unique statments
-		//Well, i think because it is checked for statements before? Maybe this can go?
-		//$resultChunked = array_chunk($resultDecoded, 1);
-		//NO THIS isnt the answer! I remember there was a way to do this right? We want to et past the 0, I have a way somewhere,
 		
-		///////////////////////////////foreach ($regAndId as $lmsId) {
-			//LEts try without resultChunked with JUST orig resutls decoded
-			//Because it would be one less nest of a '0'
-			//Also we can't just take the first object, byt making a new array assigned to value of 0,,
-			//because WHAT if there are moer than one regid? IT would then need 0, 1, 2 etc
-
+		
 			//Ok, so then this should be resultDecoded, not chunked? Uh lets just change it to chunked on 522 and save changingg
 			$length = count($resultDecoded);
 
@@ -520,9 +510,6 @@ class progress{
 
 			//Why is iteration unreachable? It's reachable in the other test file
 			//Maybe better to make this a foreach? Cause it may be diff lengts?
-
-			
-			foreach($resultDecoded as $singleStatment){
 
 				$currentLmsId = $singleStatment[$regId][0]["object"]["id"];
 			

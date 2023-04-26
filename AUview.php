@@ -218,6 +218,9 @@ $aus = json_decode($record->aus, true);
 //so current au should match id riht?
 //Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
 $currentAU = $aus[$auID];
+echo "ok, what is it looped in? :";
+    var_dump($currentAU);
+    echo "<br>";
 //now that we have current au, lets get the sessions!
 $sessions = $currentAU["session"];
 
@@ -259,11 +262,6 @@ foreach ($sessions as $sessionID => $sessionURL) {
 
                 //Create a string to pass the AU ID and registration to next page (launch.ph)
                 $infoForNextPage = $auID . ',' . $sessionURL;
-
-            echo "<br>";
-            echo "What is infofornextpage?";
-            var_dump($infoForNextPage);
-            echo "<br>";
 
                 //Why isnt the array showing?
                 $currentProgress = array();
@@ -333,12 +331,6 @@ echo "<br>";
             . "</a></p>";
         }
     
-////???}
-
-
-   
-
-//}
 
 
 // Add a form to be posted based on the attempt selected.

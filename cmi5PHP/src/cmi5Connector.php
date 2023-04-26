@@ -481,13 +481,20 @@ $createAUs = $auHelper->getCreateAUs();
     var_dump($currentAU);
     echo "<br>";
     */
+    //Needs to be multi array
+        $session = array();
     //Make the session id and launch url and aray
     $sessionInfo= array ($urlDecoded['id']);
 
     $url = $urlDecoded['url'];
            //Make the session id and launch url and aray
     $sessionInfo= array ($urlDecoded['id']=>$url);
-        $currentAU->session = $sessionInfo;
+    
+    //Now save to THSI array 
+        $session[] = $sessionInfo;
+    //NOW save to reccord
+    //Still overwriting, we need to ADD it to record....
+    $currentAU->session = $session;
 /*
         echo "<br>";
         echo "NOW current AU should be ";
