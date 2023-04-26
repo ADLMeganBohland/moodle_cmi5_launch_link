@@ -67,6 +67,7 @@ $record = $DB->get_record('cmi5launch', array('id' => $cmi5launch->id));
 $auList = json_decode($record->aus, true);
 $aus = $createAUs($auList);
 
+
 if ($cmi5launch->intro) { 
     // Conditions to show the intro can change to look for own settings or whatever.
     echo $OUTPUT->box(

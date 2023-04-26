@@ -44,6 +44,9 @@ class Au_Helpers {
 		//MB
 		function createAUs($auStatements)
 		{
+			
+			//after being resaved it is no longger nestllled in array
+
 			//So it should be fed an array of statements that then assigns the values to 
 			//several aus, and then returns the au objects! (array of objects)
 
@@ -53,17 +56,45 @@ class Au_Helpers {
 			//for ($i = 0; $i < count($auStatements); $i++) {
 			foreach($auStatements as $int => $info){
 			
+				/*
+				echo "<br>";
+				echo "what is int : ";
+				var_dump($int);
+				echo "<br>";
+				echo "<br>";
+				echo "<br>";
+			echo "whayt is info : ";
+			var_dump($info);
+			echo "<br>";
+			echo "<br>";*/
+			//Depending on who saved the aus to the db sometimes they have trailing zeroes sometimes
+			//they dont
+
+			if ($statement = $info[0]) {
+
 				//The aus come back decoded from DB nestled in an array, so they are the first key,
 				//which is '0'
 				$statement = $info[0];
-			
+
 				//Maybe just combine 45 and 48? TODO
 				$au = new au($statement);
-				
+
 				//assign the newly created au to the return array
 				$newAus[] = $au;
-
 			}
+			else {
+
+				//The aus come back decoded from DB nestled in an array, so they are the first key,
+				//which is '0'
+				$statement = $info;
+
+				//Maybe just combine 45 and 48? TODO
+				$au = new au($statement);
+
+				//assign the newly created au to the return array
+				$newAus[] = $au;
+			}
+		}
 
 			//Return our new list of AU!
 			return $newAus;

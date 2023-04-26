@@ -434,14 +434,100 @@ class cmi5Connectors{
         //sends the stream to the specified URL and stores results (the false is use_include_path, which we dont want in this case, we want to go to the url)
         $launchResponse = file_get_contents( $url, false, $context );
 
-
-		//Only return the URL
+        	//Only return the URL
 		$urlDecoded = json_decode($launchResponse, true);
-		
+		/*
+        echo "<br>";
+        echo "ok, what is pure launchresponse?   ";
+        var_dump($launchResponse);
+        echo "<br>";
+        echo " and URLDECODED is : ";
+        var_dump($urlDecoded);
+        */
+        //Url decoded is making the launch response, which is A STRING
+        //AN ARRAY FOR EASY WORKING WITH
+        //IT has ID (session id, launch MEtod, and launch url)
+        echo "<br>";
 
+        //hmmm auid is passe dhere lets experiment in launchurl
+//Or hell, launch url returned here, lets save it here
+//we obv have auID and will also have url?
+//bring in au 
 
-		$url = $urlDecoded['url'];
-	//};//end of my trial for length new url thingy
+//Maybe make a connector  class  like "sort aus and put thisin?"
+//remember to think small samll TODO
+$auHelper = new Au_Helpers;
+//bring in functions from class Progress and AU helpers
+$createAUs = $auHelper->getCreateAUs();
+
+//echo "<br>";
+  //  echo "Ok, what are AUS here?";
+    //Retrieve actor record, this enables correct actor info for URL storage
+    $aus = $createAUs(json_decode($record->aus, true) );
+    //so current au should match id riht?
+    //Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
+    $currentAU = $aus[$auID];
+   /*
+    //Wait! we need the info from launch response! THAT's why it needs to be in launchURL
+    
+    echo "<br>";
+    var_dump($aus);
+    echo "<br>";
+    echo "So if au id is :";
+    var_dump($auID);
+    echo "<br>";
+    echo "<br>";
+    echo "CURRENT AU should be ";
+    var_dump($currentAU);
+    echo "<br>";
+    */
+    //Make the session id and launch url and aray
+    $sessionInfo= array ($urlDecoded['id']);
+
+    $url = $urlDecoded['url'];
+           //Make the session id and launch url and aray
+    $sessionInfo= array ($urlDecoded['id']=>$url);
+        $currentAU->session = $sessionInfo;
+/*
+        echo "<br>";
+        echo "NOW current AU should be ";
+        var_dump($currentAU);
+        echo "<br>";
+  */
+  
+        //Theres surely a prettier way, but replace this with our new au
+
+$aus[$auID] = $currentAU;
+/*
+echo "<br>";
+        echo "IT's working! Is it putting it back in place nicely??  ";
+        var_dump($aus);
+        echo "<br>";
+  */
+  
+        //Save aus new info to record
+        //THIS part isn't working? Array to string conversion? 
+        //It's ADDING it?
+   /*    
+echo "<br>";echo "<br>";
+echo "1111111111111111 Ok RECORD, I think you are tacking on, what is your original state? ";
+        var_dump($record);
+        echo "<br>";echo "<br>";
+     */   
+        $record->aus = json_encode($aus);
+//Now save record tyo table
+$table = "cmi5launch";
+/*
+echo "<br>";echo "<br>";
+echo "2222222222222 Ok RECORD, are you updating cause the TABLE sure isnt! ";
+        var_dump($record);
+        echo "<br>";echo "<br>";
+  */
+  
+        //Update RegID
+    //Update the DB
+    $DB->update_record($table, $record, true);
+
         return $url;
 
         //What is we return the launch response? 

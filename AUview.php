@@ -49,6 +49,9 @@ $PAGE->requires->jquery();
 // Output starts here.
 echo $OUTPUT->header();
 
+//KEep track of new or not
+$newSession = "false";
+
 
 if ($cmi5launch->intro) { // Conditions to show the intro can change to look for own settings or whatever.
     echo $OUTPUT->box(
@@ -117,14 +120,10 @@ if ($cmi5launch->intro) { // Conditions to show the intro can change to look for
 //Retrieve the registration AND au ID from view.php
 $fromView = required_param('AU_view', PARAM_TEXT);
 //Break it into array (AU is first index)
-$regAndId = explode(",", $fromView);
+$lmsAndId = explode(",", $fromView);
 //Retrieve AU ID
-$auID = array_shift($regAndId);
+$auID = array_shift($lmsAndId);
 
-echo "<br>";
-echo"Okdokey what is AU ID? What is it coming from the previous pae as?";
-var_dump($auID);
-echo "<br>";
 
 //TODO
 //Maybe the only thing we need then is to retreive the AUID or sessionid and pull in
@@ -136,45 +135,17 @@ echo "<br>";
 $regid = $record->registrationid;
 //TODO.
 //We may just need this, which means adjust above so its only expecting au, whichever seems easier
-echo "<br>";
-echo "Ok, what is record, we need to get regid? Why???";
-var_dump($regid);
-echo "<br>";
-
-//MB
-//hmmm now it will never be null, it  will be one
-
-//If there were no regids there will be an array with 1 element left 
-//That element will be an empty string.
-//If regid does not equal `1' it is not a new one so go ahead and look for object id
-if ($regid != 1) {
-//    $regAndId = null; //There are no relevant registrations
-
-    echo "<br>";
-    echo "Ok, are we coming into number 1? 111111111111";
-    var_dump($regAndId);
-    echo "<br>";
 
 
 
 
     //If it is NOT null there are relevent registrations
 //And now we are using object id
-    if (!$regAndId == null) {
-        echo "<br>";
-        echo "Ok, are we coming into number 2?   222222222222222222222";
-        var_dump($regAndId);
-        echo "<br>";
+    if (!$lmsAndId == null) {
+        
         //Will we need some better way to know what to show? like session ids in place of regids? 
         //Li change previous page and thiss one to have a sessionId array not a regid array
 
-        //Ok so ideally going forward this should not be one, it should be
-        //the one that is created on previous page view.php
-        //I'll take it out now, crashing is probably better than creating new ids.
-        /*
-        //Start at 1, if continuing old attempt it will draw previous regid from LRS
-        $registrationid = 1;
-        */
         $getregistrationdatafromlrsstate = cmi5launch_get_global_parameters_and_get_state(
             "http://cmi5api.co.uk/stateapikeys/registrations"
         );
@@ -196,18 +167,22 @@ if ($regid != 1) {
         }
         //MB
         //bring in functions from classes cmi5Connector/Cmi5Tables
+        
+        //Yeah like here, maybe we can sorttt by name or something here. 
         $progress = new progress;
         $getProgress = $progress->getRetrieveStatement();
 
+        //If it equals 200 there are previous sessions to be displayed
         if ($lrsrespond == 200) {
 
             $registrationdatafromlrs = json_decode($getregistrationdatafromlrsstate->content->getContent(), true);
 
             //Array to hold verbs and be returned
-            $progress = array();
+           // $progress = array();
 
             //Remove dupliicate registration IDs (now it removes dupe object ids)
-            $regAndId = array_unique($regAndId);
+            $lmsAndId = array_unique($lmsAndId);
+        $lmsId = $lmsAndId[0];             
 
             //Array to hold info for table population
             $tableData = array();
@@ -228,30 +203,77 @@ if ($regid != 1) {
             //No longer loop, just use regid ?
             //We still need a way to sort info from lrs, something to separate aus 
 //maybe the lmsid???
-            foreach ($regAndId as $regId) {
+//So it needs a regid right?
+//can it sort by lmsID
+//No it can only sort by reg, not sure how to only bring up some.
+//remember to think small samll TODO
+$auHelper = new Au_Helpers;
+//bring in functions from class Progress and AU helpers
+$createAUs = $auHelper->getCreateAUs();
 
-                //array to hold data for table
-                $sessionInfo = array();
+//echo "<br>";
+//  echo "Ok, what are AUS here?";
+//Retrieve actor record, this enables correct actor info for URL storage
+$aus = json_decode($record->aus, true);
+//so current au should match id riht?
+//Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
+$currentAU = $aus[$auID];
+//now that we have current au, lets get the sessions!
+$sessions = $currentAU["session"];
 
-                $sessionInfo[] = date_format(
-                    date_create($registrationdatafromlrs[$regId]['created']),
-                    'D, d M Y H:i:s'
-                );
-                $sessionInfo[] = date_format(
-                    date_create($registrationdatafromlrs[$regId]['lastlaunched']),
-                    'D, d M Y H:i:s'
-                );
+//Now this should be an array soooo,
+//Should they be IN a loop, then we have separate sessions right?
+foreach ($sessions as $sessionID => $sessionURL) {
+    echo "<br>";
+    
+    echo "So sessionS is :";
+    var_dump($sessions);
+    echo "<br>";
+    echo "<br>";
+    echo "and session is   ";
+    var_dump($sessionID);
+    echo "<br>";
+    echo "<br>";
+    echo "and session is   ";
+    var_dump($sessionURL);
+    echo "<br>";
+    //////////////////////////////////
+//may not need this
+        //foreach ($lmsAndId as $lmsId) {
 
-                echo "<br>";
-                echo "Okdokey what is AU ID? Wht is it goin tom the next page as?";
-                var_dump($auID);
-                echo "<br>";
+            //array to hold data for table
+            $sessionInfo = array();
+
+            $sessionInfo[] = date_format(
+                date_create($registrationdatafromlrs[$regid]['created']),
+                'D, d M Y H:i:s'
+            );
+            $sessionInfo[] = date_format(
+                date_create($registrationdatafromlrs[$regid]['lastlaunched']),
+                'D, d M Y H:i:s'
+            );
+            ///////////////////////////////////
+//Maybe make a connector  class  like "sort aus and put thisin?"
+
+
 
                 //Create a string to pass the AU ID and registration to next page (launch.ph)
-                $infoForNextPage = $auID; // . "," . $regId;
+                $infoForNextPage = $auID . ',' . $sessionURL;
 
+            echo "<br>";
+            echo "What is infofornextpage?";
+            var_dump($infoForNextPage);
+            echo "<br>";
+
+                //Why isnt the array showing?
+                $currentProgress = array();
+
+
+                //So the question is can this pas son something besiodes reg to get progress, or should we call earlier and parse out 
+                ////unwanted things
                 $sessionInfo[] =
-                    ("<pre>" . implode("\n ", $getProgress($regId, $cmi5launch->id)) . "</pre>");
+                        // var_dump($lmsId);
+                    ("<pre>" . implode("\n ", $getProgress($regid, $cmi5launch->id, $lmsId)) . "</pre>");
 
                 $sessionInfo[] =
                     "<a tabindex=\"0\" id='cmi5relaunch_attempt'
@@ -268,6 +290,13 @@ if ($regid != 1) {
 
             echo html_writer::table($table);
 
+
+            //Ok, here this is new sooooo
+            //maybe pass the word new throuh?
+            $newSession = "true";
+            //Create a string to pass the auid and reg to next page (launch.php)
+            $infoForNextPage = $auID . "," . $newSession;
+
             //This builds the start new reg button - MB
             // Needs to come after previous attempts so a non-sighted user can hear launch options.
             if ($cmi5launch->cmi5multipleregs) {
@@ -278,47 +307,37 @@ if ($regid != 1) {
                     . get_string('cmi5launch_attempt', 'cmi5launch')
                     . "</a></p>";
             }
-
+        }//end new session tril
         }
-        //Honestly is this needed here? 
-        /*else {
-        //This is a new attempt, set registraion id to one
-        $registrationid = 1;
-        echo "<p tabindex=\"0\"
-        onkeyup=\"key_test('" . $registrationid . "')\"
-        id='cmi5launch_newattempt'><a onclick=\"mod_cmi5launch_launchexperience('"
-        . $registrationid
-        . "')\" style=\"cursor: pointer;\">"
-        . get_string('cmi5launch_attempt', 'cmi5launch')
-        . "</a></p>";
-        }*/
-    }
-}
-//If it is one it is new request
-//elseif($regid == 1) {
-    echo "<br>";
-    echo "Ok, are we coming into number 3 (elseif) ?   333333333333";
-    var_dump($regid);
-    echo "<br>";
-       //Ok so ideally going forward this should not be one, it should be
-    //the one that is created on previous page view.php
-    //I'll take it out now, crashing is probably better than creating new ids.
-    /*
-    //Start at 1, if continuing old attempt it will draw previous regid from LRS
-    $registrationid = 1;
+        else {
+/*
+            echo "<br>";
+echo "I BET we are not entering this else : ";
+var_dump($newSession);
+echo "<br>";
+echo "<br>";
 */
-
+            //Ok, here this is new sooooo
+            //maybe pass the word new throuh?
+            $newSession = "true";
     //Create a string to pass the auid and reg to next page (launch.php)
-    $infoForNextPage = $auID; // . "," . $regId;
+    $infoForNextPage = $auID . "," . $newSession;
+
+            //New attempt
+            echo "<p tabindex=\"0\"
+            onkeyup=\"key_test('" . $infoForNextPage . "')\"
+            id='cmi5launch_newattempt'><a onclick=\"mod_cmi5launch_launchexperience('"
+            . $infoForNextPage
+            . "')\" style=\"cursor: pointer;\">"
+            . get_string('cmi5launch_attempt', 'cmi5launch')
+            . "</a></p>";
+        }
+    
+////???}
+
+
    
 
-    echo "<p tabindex=\"0\"
-        onkeyup=\"key_test('" . $infoForNextPage . "')\"
-        id='cmi5launch_newattempt'><a onclick=\"mod_cmi5launch_launchexperience('"
-        . $infoForNextPage
-        . "')\" style=\"cursor: pointer;\">"
-        . get_string('cmi5launch_attempt', 'cmi5launch')
-        . "</a></p>";
 //}
 
 

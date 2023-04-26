@@ -651,10 +651,7 @@ $regID = array_pop($regAndId);
     $record->registrationid = $registration;
 
 
-    echo "<br>";
-    echo "Ok, WHAT IS REGISTRATION immediealty in lib.php";
-    var_dump($registration);
-    echo "<br>";
+    
 
     $record->cmi5activityid = $lmsId;
 	//create url for sending to when requesting launch url for course 

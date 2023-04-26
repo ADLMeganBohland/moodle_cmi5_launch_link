@@ -36,25 +36,29 @@ $event->add_record_snapshot('cmi5launch', $cmi5launch);
 $event->trigger();
 
 //Retrieve registration id and au index (from AUview.php)
+//How about if infofornext pae is like a string or not?
 $fromAUview = required_param('launchform_registration', PARAM_TEXT);
-
-
 /*
-//this will change cause there will only be ONE regid going forward
-//Break it into array (AU is first index)
-$regAndId = explode(",", $fromAUview);
-//Retrieve the AU ID 
-$auID = array_shift($regAndId);
-//Now the registration ID, it should be the first element in the array after AU ID was taken
-$registrationid = $regAndId[0];
+echo "<br>";
+echo "Did it work? what is plain fromauview  : ";
+var_dump($fromAUview);
+echo "<br>";
+echo "<br>";
 */
-
-
 //Break it into array (AU is first index)
 $regAndId = explode(",", $fromAUview);
+
 //Retrieve AU ID
 $auID = array_shift($regAndId);
 
+/*
+echo "<br>";
+echo "Did it work? what is au id";
+var_dump($auID);
+echo "<br>";
+echo "Did it work? what is  reg and id after explosion : ";
+var_dump($regAndId);
+echo "<br>";
 /*
 echo "<br>";
 echo"Okdokey what is AU ID? What is it coming from the previous pae as? THIS IS LAUNCH";
@@ -87,13 +91,14 @@ if (empty($registrationid)) {
 //TODO
 //This won't ever be one, it will be the one reg, so I guess we need to check
 //if its null or not? 
-if ($registrationid == 1) {
 
-    //Ok, if its one than we need to get the 'id' returned with the launch url request and 
-    //use it to save reggid to tabkle
-    //So THIS stays here? Right, this changes based on AU
+//To hold launch url or whether launch url is new!
+$location = "";
+if ($regAndId[0] == "true") {
+   // echo "Are we entering this if";
 
-    //Maybe her eit can retrieve the reid from the table instead of generating
+        //Then this is a NEW launch
+    $location = cmi5launch_get_launch_url($registrationid, $auID);
 
 } else {
 
@@ -232,9 +237,12 @@ elseif ($lrsrespond != 404){
     //Is it this????
 //I think it may be!!!
 
+    //If this isn't 'true' this should be the launurl.
+    $location = $regAndId[0];
 } //end else
 
-header("Location: ". cmi5launch_get_launch_url($registrationid, $auID));
+//Nope. howabout we put the launch url HERE! and either get or retreive it depending on what was pushed@
+header("Location: ". $location);
 
 exit;
 

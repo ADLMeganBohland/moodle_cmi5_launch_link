@@ -151,15 +151,11 @@ class progress{
 		$foundStatement = array();
 		
 		foreach($regId as $id){
-			echo "Give me the regid here!!!";
-			echo($id);
-			echo "<br>";
+			
 
 			foreach ($aus as $key => $item) {
 
-				echo "Give me the  au id here!!!";
-			echo( $au['id'] );
-			echo "<br>";
+			
 
 				//Retrieve individual AU as array
 				$au = (array) ($aus[$key]);
@@ -487,11 +483,10 @@ class progress{
 	//
 	//And is not currently being successful
 	//sooooo
+	//It may be ok to change herer, only uview calls it
 	/** */
-	public function retrieveStatement($regId, $id)
+	public function retrieveStatement($regId, $id, $lmsId)
 	{
-
-
 		//Array to hold verbs and be returned
 		$progressUpdate = array();
 
@@ -499,49 +494,68 @@ class progress{
 		$verbs = array();
 
 		$resultDecoded = $this->requestLRSinfo($regId, $id);
+		$resultChunked = $resultDecoded;
+		
+		foreach($resultDecoded as $singleStatment){
 
-
+			$currentLmsId = $singleStatment[$regId][0]["object"]["id"];
+			
+			 
+		}
 		//The results come back as nested array under more then statments. We only want statements, and we want them separated into unique statments
 		//Well, i think because it is checked for statements before? Maybe this can go?
 		//$resultChunked = array_chunk($resultDecoded, 1);
 		//NO THIS isnt the answer! I remember there was a way to do this right? We want to et past the 0, I have a way somewhere,
 		
+		///////////////////////////////foreach ($regAndId as $lmsId) {
+			//LEts try without resultChunked with JUST orig resutls decoded
+			//Because it would be one less nest of a '0'
+			//Also we can't just take the first object, byt making a new array assigned to value of 0,,
+			//because WHAT if there are moer than one regid? IT would then need 0, 1, 2 etc
 
-		//LEts try without resultChunked with JUST orig resutls decoded
-		//Because it would be one less nest of a '0'
-		//Also we can't just take the first object, byt making a new array assigned to value of 0,,
-		//because WHAT if there are moer than one regid? IT would then need 0, 1, 2 etc
+			//Ok, so then this should be resultDecoded, not chunked? Uh lets just change it to chunked on 522 and save changingg
+			$length = count($resultDecoded);
 
-		//Ok, so then this should be resultDecoded, not chunked? Uh lets just change it to chunked on 522 and save changingg
-		$length = count($resultDecoded);
+			//If length is resultDecod, it should be amount of regids
 
-		//If length is resultDecod, it should be amount of regids
+			//Why is iteration unreachable? It's reachable in the other test file
+			//Maybe better to make this a foreach? Cause it may be diff lengts?
 
-		//Why is iteration unreachable? It's reachable in the other test file
-		//Maybe better to make this a foreach? Cause it may be diff lengts?
+			
+			foreach($resultDecoded as $singleStatment){
 
-		//Maybe DO use this form, cause then we can use the 'i' number to select the WHOLE regid array, and THAT can be parsed accordingly
-		for ($i = 0; $i < $length; $i++) {
+				$currentLmsId = $singleStatment[$regId][0]["object"]["id"];
+			
+			//Maybe DO use this form, cause then we can use the 'i' number to select the WHOLE regid array, and THAT can be parsed accordingly
+			//for ($i = 0; $i < $length; $i++) {
+				//The for takes us through result decoded
+				//Now lets use an if to pull out statments we want
 
-			//Now we want to have a second iteration through the regid array BECAUSE there may be more than one verb per array
-			//so maybe an if then//
-			//or maybe just make the progress array and make array of it too,
+				//$currentLmsId = $resultDecoded[$i][$regId][0]["object"]["id"];
 
-			$currentRegid = $resultDecoded[$i];
-//Maybe not needed, as each regid IS doing it's own thing, even same regid mutlples as diff
+				//We also only want regid ones!
+				if ($currentLmsId == $lmsId )     {                                               //&& $regId == $resultDecoded[$i]) {
+					//iF THE OBJECT ID MATCHES WE WANT THIS STATMENT
+				//Now we want to have a second iteration through the regid array BECAUSE there may be more than one verb per array
+				//so maybe an if then//
+				//or maybe just make the progress array and make array of it too,
+				
+				//Maybe HERE! resultdecoded[lmsid thing]
+				//$currentStatement = $resultDecoded[$i][$regId][0];
+				//Maybe not needed, as each regid IS doing it's own thing, even same regid mutlples as diff
 
-		//	foreach ($currentRegid as $regid => $regInfo) {
+				//	foreach ($currentRegid as $regid => $regInfo) {
 
-		//i is each separate statment
-            //We don't know the regid, but need it because it's the first array key, 
-            //sosimply retrieve the key itself.
-            //current regid
-            $regid = array_key_first($currentRegid);
+				//i is each separate statment
+				//We don't know the regid, but need it because it's the first array key, 
+				//sosimply retrieve the key itself.
+				//current regid
+				//$regid = array_key_first($regId);
 				//Now to parse the diff verbs, maybe array chunk on 'id'?
-				$actor = $this->retrieveActor($currentRegid, $regid);
-				$verb = $this->retrieveVerbs($currentRegid, $regid);
-				$object = $this->retrieveObject($currentRegid, $regid);
-				$date = $this->retrieveTimestamp($currentRegid, $regid);
+				$actor = $this->retrieveActor($singleStatment, $regId);
+				$verb = $this->retrieveVerbs($singleStatment, $regId);
+				$object = $this->retrieveObject($singleStatment, $regId);
+				$date = $this->retrieveTimestamp($singleStatment, $regId);
 
 				//Maybe make this an overloaded func that can print this and /or just verbs
 				//Like if you pass in verbs it gives only verbs
@@ -551,11 +565,16 @@ class progress{
 				//Could even pas as actor=>actor
 				//OR object=> actor, verb, date. Then we can sort it by au!
 				$progressUpdate[] = "$actor $verb $object on $date";
-			//}
-		
+				//}
 			
-		}
-		return $progressUpdate;
+		
+			}
+
+
+			}
+
+			return $progressUpdate;
+		
 	}
 
 	public function prettyProgress($arrayOfStatements){
