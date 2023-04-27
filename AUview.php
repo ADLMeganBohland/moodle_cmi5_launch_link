@@ -136,13 +136,14 @@ $regid = $record->registrationid;
 //TODO.
 //We may just need this, which means adjust above so its only expecting au, whichever seems easier
 
-
+echo "What is lmsid?";
+var_dump($lmsAndId);
 
 
     //If it is NOT null there are relevent registrations
 //And now we are using object id
-    if (!$lmsAndId == null) {
-        
+    if ($lmsAndId[0] != "") {
+        echo "MCON";
         //Will we need some better way to know what to show? like session ids in place of regids? 
         //Li change previous page and thiss one to have a sessionId array not a regid array
 

@@ -467,20 +467,7 @@ $createAUs = $auHelper->getCreateAUs();
     //so current au should match id riht?
     //Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
     $currentAU = $aus[$auID];
-   /*
-    //Wait! we need the info from launch response! THAT's why it needs to be in launchURL
-    
-    echo "<br>";
-    var_dump($aus);
-    echo "<br>";
-    echo "So if au id is :";
-    var_dump($auID);
-    echo "<br>";
-    echo "<br>";
-    echo "CURRENT AU should be ";
-    var_dump($currentAU);
-    echo "<br>";
-    */
+   
     //Needs to be multi array
         $session = array();
     //Make the session id and launch url and aray
@@ -491,45 +478,54 @@ $createAUs = $auHelper->getCreateAUs();
     $sessionInfo= array ($urlDecoded['id']=>$url);
     
     //Now save to THSI array 
-        $session[] = $sessionInfo;
-    //NOW save to reccord
+     //   $session[] = $sessionInfo;
+
+        //So retreive what is in CURERENT AU ALREADY
+        $previousSessions = $currentAU->session;
+
+        if ($previousSessions == NULL) {
+        //Just make our session the only bit
+        //Now save to THSI array 
+        $session = $sessionInfo;
+        $currentAU->session = $session;
+        }
+        else{
+            //There are previous sessions!
+                 //concat them?
+        //echo "<br>";
+      //  echo "What does previous session ook like? ";
+//var_dump($previousSessions);
+//echo "<br>";
+          
+   //Now save to THSI array 
+       $session = [$previousSessions , $sessionInfo];
+       // $sessionSend = $previousSessions
+    //   echo "<br>";
+  //     echo "does this work ";
+//var_dump($session);
+        }
+    
+//echo "<br>";
     //Still overwriting, we need to ADD it to record....
-    $currentAU->session = $session;
-/*
-        echo "<br>";
-        echo "NOW current AU should be ";
-        var_dump($currentAU);
-        echo "<br>";
-  */
-  
+    $currentAU->session = ($session);
+     //Save aus new info to record
+        //THIS part isn't working? Array to string conversion? 
+        //It's ADDING it?
+ 
+        
+        //concat them?
+
         //Theres surely a prettier way, but replace this with our new au
 
 $aus[$auID] = $currentAU;
-/*
-echo "<br>";
-        echo "IT's working! Is it putting it back in place nicely??  ";
-        var_dump($aus);
-        echo "<br>";
-  */
-  
-        //Save aus new info to record
-        //THIS part isn't working? Array to string conversion? 
-        //It's ADDING it?
-   /*    
-echo "<br>";echo "<br>";
-echo "1111111111111111 Ok RECORD, I think you are tacking on, what is your original state? ";
-        var_dump($record);
-        echo "<br>";echo "<br>";
-     */   
+
+       
+        //send?
+        //SEND THE AUS WE NEED TO UPDATETHEI R PROPERTY
         $record->aus = json_encode($aus);
 //Now save record tyo table
 $table = "cmi5launch";
-/*
-echo "<br>";echo "<br>";
-echo "2222222222222 Ok RECORD, are you updating cause the TABLE sure isnt! ";
-        var_dump($record);
-        echo "<br>";echo "<br>";
-  */
+
   
         //Update RegID
     //Update the DB
