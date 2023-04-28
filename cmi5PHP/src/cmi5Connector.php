@@ -381,6 +381,7 @@ class cmi5Connectors{
         //There is a returnurl uin the player table
         global $DB;
 
+   
 		//Retrieve actor record, this enables correct actor info for URL storage
 		$record = $DB->get_record("cmi5launch", array('id' => $id));
 
@@ -480,34 +481,54 @@ $createAUs = $auHelper->getCreateAUs();
     //Now save to THSI array 
      //   $session[] = $sessionInfo;
 
-        //So retreive what is in CURERENT AU ALREADY
-        $previousSessions = $currentAU->session;
+        
 
-        if ($previousSessions == NULL) {
+        if ($currentAU->session == NULL) {
+
+            
         //Just make our session the only bit
         //Now save to THSI array 
-        $session = $sessionInfo;
+        $session [] = $sessionInfo;
         $currentAU->session = $session;
         }
         else{
             //There are previous sessions!
+            //So retreive what is in CURERENT AU ALREADY
+        $previousSessions = $currentAU->session;
                  //concat them?
-        //echo "<br>";
-      //  echo "What does previous session ook like? ";
-//var_dump($previousSessions);
-//echo "<br>";
-          
-   //Now save to THSI array 
-       $session = [$previousSessions , $sessionInfo];
-       // $sessionSend = $previousSessions
-    //   echo "<br>";
-  //     echo "does this work ";
-//var_dump($session);
+
+                 //first add the old ones to this array
+            $session[] = $previousSessions;
+            //Then add the new stuff
+            $session[] = $sessionInfo;
+            //Now stick this to the currentAU's property
+            $currentAU->session = $session;
+
         }
-    
+        /*
+        $session[] = $sessionInfo;
+        $currentAU->session = $session;
+        echo "<br>";
+        echo "What does previous session ook like? 222222 ";
+var_dump($previousSessions[] = $sessionInfo);
+echo "<br>";
+$previousSessions[] = $sessionInfo;
+echo "ok, should be one";
+        var_dump($previousSessions);
+echo "<br>";
+$previousSessions[] = $sessionInfo;
+echo "<br>";
+
+        echo "Ok, now it should be added on";
+        var_dump($previousSessions);
+echo "<br>";
+*/
+//Ok, that seems to work
+
+
 //echo "<br>";
     //Still overwriting, we need to ADD it to record....
-    $currentAU->session = ($session);
+    //$currentAU->session = ($session);
      //Save aus new info to record
         //THIS part isn't working? Array to string conversion? 
         //It's ADDING it?

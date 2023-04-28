@@ -70,7 +70,8 @@ class Au_Helpers {
 			//Depending on who saved the aus to the db sometimes they have trailing zeroes sometimes
 			//they dont
 
-			if ($statement = $info[0]) {
+			//Check if the $info has an array key of 0
+			if (array_key_exists(0, $info)) {
 
 				//The aus come back decoded from DB nestled in an array, so they are the first key,
 				//which is '0'

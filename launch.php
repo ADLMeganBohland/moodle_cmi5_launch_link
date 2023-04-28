@@ -96,12 +96,19 @@ if (empty($registrationid)) {
 $location = "";
 if ($regAndId[0] == "true") {
    // echo "Are we entering this if";
+   echo "<br>";
+   echo "Are   we making it to the starts this is fiirst if?";
+    //Ok, ok we are here
+
+
 
         //Then this is a NEW launch
     $location = cmi5launch_get_launch_url($registrationid, $auID);
 
 } else {
-
+    echo "<br>";
+    echo "Are we in the else where is everyone?!?!?";
+ 
     // Save a record of this registration to the LRS state API.
     $getregistrationdatafromlrsstate = cmi5launch_get_global_parameters_and_get_state(
         "http://cmi5api.co.uk/stateapikeys/registrations"
@@ -239,6 +246,11 @@ elseif ($lrsrespond != 404){
 
     //If this isn't 'true' this should be the launurl.
     $location = $regAndId[0];
+    echo "<br>";
+    echo "to the end of this else? if so what is location";
+    var_dump($location);
+ 
+
 } //end else
 
 //Nope. howabout we put the launch url HERE! and either get or retreive it depending on what was pushed@

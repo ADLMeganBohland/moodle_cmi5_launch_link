@@ -179,8 +179,9 @@ $retrieveUrl = $connectors->getRetrieveUrl();
 //Should we pass the url here or like a 'code' if not new>=?
 
 //$record = $DB->get_record("cmi5launch_player", array('registrationid' => $registrationuuid));
-$rtnstring = $retrieveUrl($cmi5launch->id, $auID); 
-
+$rtnstring = $retrieveUrl($cmi5launch->id, $auID);
+    echo "<br>";
+    echo "Are   we making it to the end?";
 
 //$rtnstring = $record->launchurl;
 

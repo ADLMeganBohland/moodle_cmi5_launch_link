@@ -218,32 +218,39 @@ $createAUs = $auHelper->getCreateAUs();
 $aus = json_decode($record->aus, true);
 //so current au should match id riht?
 //Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
+
 $currentAU = $aus[$auID];
 echo "ok, what is it looped in? :";
     var_dump($currentAU);
     echo "<br>";
 //now that we have current au, lets get the sessions!
-$sessions = $currentAU["session"];
+//Deal with null issue - MB
+		if ($sessions = $currentAU["session"] != null) {
+			$sessions = $currentAU["session"];
 
-//Now this should be an array soooo,
+			//Now this should be an array soooo,
 //Should they be IN a loop, then we have separate sessions right?
-foreach ($sessions as $sessionID => $sessionURL) {
-    echo "<br>";
-    
-    echo "So sessionS is :";
-    var_dump($sessions);
-    echo "<br>";
-    echo "<br>";
-    echo "and session is   ";
-    var_dump($sessionID);
-    echo "<br>";
-    echo "<br>";
-    echo "and session is   ";
-    var_dump($sessionURL);
-    echo "<br>";
+			foreach ($sessions as $sessionID => $sessionURL) {
+				echo "<br>";
+
+				echo "So sessionS is :";
+				var_dump($sessions);
+				echo "<br>";
+				echo "<br>";
+				echo "and session is   ";
+				var_dump($sessionID);
+				echo "<br>";
+				echo "<br>";
+				echo "and session is   ";
+				var_dump($sessionURL);
+				echo "<br>";
+			}
+		}  
     //////////////////////////////////
 //may not need this
-        //foreach ($lmsAndId as $lmsId) {
+///Ahhhhh Use THIS is lmsid is null until all kinks fixed
+ //else for when session is null {}   
+foreach ($lmsAndId as $lmsId) {
 
             //array to hold data for table
             $sessionInfo = array();
