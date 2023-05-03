@@ -166,6 +166,22 @@ if ( $record->registrationid == null) {
     //Update the DB
     $DB->update_record($table, $record, true);
 
+///////Get session info?
+
+//Retrieve actor record, this enables correct actor info for URL storage
+$aus = json_decode($record->aus, true);
+//so current au should match id riht?
+//Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
+echo "<br>";
+echo "Ok, what are AUS here?";
+var_dump($aus);
+echo "<br>";
+$currentAU = $aus[$auID];
+echo "ok, what is it looped in? :";
+    var_dump($currentAU);
+    echo "<br>";
+   
+
 //Retreive LRS info    
 $getregistrationdatafromlrsstate = cmi5launch_get_global_parameters_and_get_state(
     "http://cmi5api.co.uk/stateapikeys/registrations"

@@ -228,14 +228,27 @@ echo "ok, what is it looped in? :";
 		if ($sessions = $currentAU["session"] != null) {
 			$sessions = $currentAU["session"];
 
+            echo "<br>";
+
+            echo "So sessionS is :";
+            var_dump($sessions);
+            echo "<br>";
+            //	//The results come back as nested array under more then statments. We only want statements, and we want them separated into unique statments
+			$sessionChunked = array_cShunk($sessions[0][0], 1, true);
+            //The info has now been broken into chunks
+			//Return the AU with the chuncks, but start at 0 because array_chunk returns an array, all will be 
+			//nestled under 0
+            echo "<br>";
+
+            echo "So session chunked is :";
+            var_dump($sessionChunked);
+            echo "<br>";
+		
 			//Now this should be an array soooo,
 //Should they be IN a loop, then we have separate sessions right?
-			foreach ($sessions as $sessionID => $sessionURL) {
-				echo "<br>";
-
-				echo "So sessionS is :";
-				var_dump($sessions);
-				echo "<br>";
+			foreach ($sessionChunked as $sessionID => $sessionURL) {
+				
+              
 				echo "<br>";
 				echo "and session is   ";
 				var_dump($sessionID);
@@ -245,12 +258,12 @@ echo "ok, what is it looped in? :";
 				var_dump($sessionURL);
 				echo "<br>";
 			}
-		}  
+//		}  
     //////////////////////////////////
 //may not need this
 ///Ahhhhh Use THIS is lmsid is null until all kinks fixed
  //else for when session is null {}   
-foreach ($lmsAndId as $lmsId) {
+//foreach ($lmsAndId as $lmsId) {
 
             //array to hold data for table
             $sessionInfo = array();

@@ -437,14 +437,14 @@ class cmi5Connectors{
 
         	//Only return the URL
 		$urlDecoded = json_decode($launchResponse, true);
-		/*
+		
         echo "<br>";
         echo "ok, what is pure launchresponse?   ";
         var_dump($launchResponse);
         echo "<br>";
         echo " and URLDECODED is : ";
         var_dump($urlDecoded);
-        */
+        
         //Url decoded is making the launch response, which is A STRING
         //AN ARRAY FOR EASY WORKING WITH
         //IT has ID (session id, launch MEtod, and launch url)
@@ -469,10 +469,13 @@ $createAUs = $auHelper->getCreateAUs();
     //Bercause AUs are saved as arrays they have to be dddecoded when pulled out of storage
     $currentAU = $aus[$auID];
    
+  
     //Needs to be multi array
         $session = array();
     //Make the session id and launch url and aray
-    $sessionInfo= array ($urlDecoded['id']);
+    //Why is this called twice?
+
+   // $sessionInfo= array ($urlDecoded['id']);
 
     $url = $urlDecoded['url'];
            //Make the session id and launch url and aray
@@ -488,6 +491,8 @@ $createAUs = $auHelper->getCreateAUs();
             
         //Just make our session the only bit
         //Now save to THSI array 
+        //maybe THIS doesn't need to be array!! It's the first one?
+       //No, the prob is session info has a ero array already whhhy
         $session [] = $sessionInfo;
         $currentAU->session = $session;
         }
