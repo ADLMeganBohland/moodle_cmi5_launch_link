@@ -101,7 +101,7 @@ class Au_Helpers
 			$desc = json_decode(json_encode($auObject->description), true);
 			$newRecord->description = $desc[0]['text'];
 			$newRecord->activitytype = $auObject->activityType;
-			$newRecord->masteryscore = $auObject->masteryscore;
+			$newRecord->masteryscore = $auObject->masteryScore;
 			$newRecord->completed = $auObject->completed;
 			$newRecord->passed = $auObject->passed;
 			$newRecord->inprogress = $auObject->inprogress;

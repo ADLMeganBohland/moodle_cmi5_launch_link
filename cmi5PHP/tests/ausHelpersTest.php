@@ -17,37 +17,10 @@ use moodle_database;
  */
 class AusHelpersTest extends TestCase
 {
-    private $auProperties = array(), $emptyStatement = array(), $mockStatementValues = array();
+    private $emptyStatement = array(), $mockStatementValues = array(), $mockStatementValues2 = array();
 
     protected function setUp(): void
     {
-        $this->auProperties = array(
-            'id',
-            'url',
-            'type',
-            'lmsid',
-            'grade',
-            'scores',
-            'title',
-            'moveon',
-            'auindex',
-            'parents',
-            'objectives',
-            'description',
-            'activitytype',
-            'launchmethod',
-            'masteryscore',
-            'satisfied',
-            'launchurl',
-            'sessionid',
-            'sessions',
-            'progress',
-            'noattempt',
-            'completed',
-            'passed',
-            'inprogress',
-        );
-
         $this->emptyStatement = array();
 
         //Perhaps a good test would be to test the constructor with a statement that has all the properties set.
@@ -55,7 +28,7 @@ class AusHelpersTest extends TestCase
             'id' => 0,
             'url' => 'url',
             'type' => 'type',
-            'lmsid' => 'lmsid',
+            'lmsId' => 'lmsid',
             'grade' => 'grade',
             'scores' => 'scores',
             'title' =>  array (
@@ -71,9 +44,9 @@ class AusHelpersTest extends TestCase
                 array ("0"=> "en-Test",
                 "text" => "Testing Testing.")
             ),
-            'activitytype' => 'activitytype',
+            'activityType' => 'activitytype',
             'launchMethod' => 'Ownwindow',
-            'masteryscore' => 0,
+            'masteryScore' => 0,
             'satisfied' => 0,
             'launchurl' => 'launchurl',
             'sessionid' => 'sessionid',

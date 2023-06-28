@@ -23,7 +23,7 @@
 class Au {
 // Properties
 
-	public $id, $url, $type, $lmsid, $grade, $scores, $title, $moveon, $auindex, $parents, $objectives, $description, $activitytype, $launchmethod, $masteryscore, $satisfied, $launchurl, $sessionid, $sessions, $progress, $noattempt, $completed, $passed, $inprogress;
+	public $id, $url, $type, $lmsId, $grade, $scores, $title, $moveOn, $auIndex, $parents, $objectives, $description, $activityType, $launchMethod, $masteryScore, $satisfied, $launchurl, $sessionid, $sessions, $progress, $noattempt, $completed, $passed, $inprogress;
 
 	// Methods
 	//Constructs AUs. Is fed array and where array key matches property, sets the property.  
