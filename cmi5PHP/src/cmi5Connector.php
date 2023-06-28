@@ -333,6 +333,10 @@ class cmi5Connectors{
         //the options are here placed into a stream to be sent
         $context  = stream_context_create(($options));
 
+        echo"<br>";
+        echo" This is the the url>:";
+        var_dump($url);
+        ECHO"<br>";
         //sends the stream to the specified URL and stores results (the false is use_include_path, which we dont want in this case, we want to go to the url)
         $launchResponse = file_get_contents( $url, false, $context );
 

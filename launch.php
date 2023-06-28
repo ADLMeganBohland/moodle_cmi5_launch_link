@@ -85,8 +85,15 @@ if ($idAndStatus[0] == "true") {
 	//Retrieve AUs         
 	$au = $getAUs($id);
 
+	echo "au: ";
+	echo"<br>";
+	echo"what is id?";
+	echo $id;
+	echo"<br>";
 	//Retrieve AU index
 	$auIndex = $au->auindex;
+	echo "au index: ";
+	echo $auIndex;
 
 	//Pass in the au index to retrieve a launchurl and session id
 	$urlDecoded = $retrieveUrl($cmi5launch->id, $auIndex);

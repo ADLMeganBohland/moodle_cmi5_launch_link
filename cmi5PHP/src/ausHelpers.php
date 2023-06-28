@@ -57,6 +57,7 @@ class Au_Helpers
 			//Maybe just combine 45 and 48? TODO
 			$au = new au($statement);
 
+
 			//assign the newly created au to the return array
 			$newAus[] = $au;
 		}

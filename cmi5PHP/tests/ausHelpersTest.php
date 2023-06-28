@@ -4,6 +4,7 @@ namespace cmi5Test;
 use PHPUnit\Framework\TestCase;
 use Au;
 use Au_Helpers;
+use moodle_database;
 
 /**
  * Tests for AuHelpers class.
@@ -16,7 +17,7 @@ use Au_Helpers;
  */
 class AusHelpersTest extends TestCase
 {
-   // private $auProperties, $emptyStatement, $mockStatementValues;
+    private $auProperties = array(), $emptyStatement = array(), $mockStatementValues = array();
 
     protected function setUp(): void
     {
@@ -51,30 +52,37 @@ class AusHelpersTest extends TestCase
 
         //Perhaps a good test would be to test the constructor with a statement that has all the properties set.
         $this->mockStatementValues = array(
-            'id' => 'id',
+            'id' => 0,
             'url' => 'url',
             'type' => 'type',
             'lmsid' => 'lmsid',
             'grade' => 'grade',
             'scores' => 'scores',
-            'title' => 'title',
-            'moveon' => 'moveon',
-            'auindex' => 'auindex',
+            'title' =>  array (
+                array ("0"=> "en-Test",
+                "text" => "Introduction to Testing"
+                )
+            ),
+            'moveOn' => 'moveon',
+            'auIndex' => 0,
             'parents' => 'parents',
             'objectives' => 'objectives',
-            'description' => 'description',
+            'description' =>  array (
+                array ("0"=> "en-Test",
+                "text" => "Testing Testing.")
+            ),
             'activitytype' => 'activitytype',
-            'launchmethod' => 'launchmethod',
-            'masteryscore' => 'masteryscore',
-            'satisfied' => 'satisfied',
+            'launchMethod' => 'Ownwindow',
+            'masteryscore' => 0,
+            'satisfied' => 0,
             'launchurl' => 'launchurl',
             'sessionid' => 'sessionid',
             'sessions' => 'sessions',
             'progress' => 'progress',
-            'noattempt' => 'noattempt',
-            'completed' => 'completed',
-            'passed' => 'passed',
-            'inprogress' => 'inprogress',
+            'noattempt' => 0,
+            'completed' => 0,
+            'passed' => 0,
+            'inprogress' => 0,
         );
     }
 
@@ -239,16 +247,51 @@ class AusHelpersTest extends TestCase
             $this->assertInstanceOf(Au::class, $au, "Expected retrieved statement to be an array of aus");
         }
     }
+    //To start toorrow
+    //changed aushelpers backto have camel case in somecases. thats how it comes IN, so we just need to make a test
+    //that takes that into account, not change for test!
 
-    //This one is going to be tricky, it saves to a DB! I know test php can have TEST DBs, but is that setup here?
-    //And how to freaking test THAT?
-    //Well, actually we don't need to test it goes to the DB, THAT was the job of the person who invented insert_record
-    //We just need tothat it saves the correct values and CALLS insert_record
-    //Technically this function returns ids, so we can make a stub which just returns ids
-    //This will test it is called without messing with the DB
-    public function testSaveAus()
-    {
+    //Tests SaveAUs when one is passed. Saves to phpunit_test_db
+    public function testSaveAusOneID()
+    {  
+        //Can we just make AUs and pass them in? 
+        $helper = new Au_Helpers();
+        //Lets create 1 au
+        for ($i = 0; $i < 1; $i++) {
+            $testStatements[$i][] = $this->mockStatementValues;
+        }
+        //Create array of AUs to send to saveAUs
+        $auArray = $helper->createAus($testStatements);
 
+        //Pass it to SaveAUs. SaveAUs returns an array of ids
+        $auList = $helper->saveAUs($auArray);
+
+        //It DOES return as array
+        $this->assertIsArray($auList, "Expected retrieved statement to be an array");
+        //And it returns one in array, since we passed in one?
+        $this->assertCount(1, $auList, "Expected retrieved statement to have one id");
+          
     }   
 
+        //Tests SaveAUs when one is passed. Saves to phpunit_test_db
+        public function testSaveAusMultipleID()
+        {  
+            //Can we just make AUs and pass them in? 
+            $helper = new Au_Helpers();
+            //Lets create 1 au
+            for ($i = 0; $i < 4; $i++) {
+                $testStatements[$i][] = $this->mockStatementValues;
+            }
+            //Create array of AUs to send to saveAUs
+            $auArray = $helper->createAus($testStatements);
+    
+            //Pass it to SaveAUs. SaveAUs returns an array of ids
+            $auList = $helper->saveAUs($auArray);
+    
+            //It DOES return as array
+            $this->assertIsArray($auList, "Expected retrieved statement to be an array");
+            //And it returns 4 in array, since we passed in 4?
+            $this->assertCount(4, $auList, "Expected retrieved statement to have four ids");
+              
+        }  
 }
