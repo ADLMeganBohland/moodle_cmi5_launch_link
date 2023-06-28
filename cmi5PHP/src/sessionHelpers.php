@@ -20,7 +20,8 @@ class Session_Helpers
 	}
 
 	/**
-	 * Gets updated session information from CMI5 player
+	 * Gets updated session information from CMI5 player using the session id
+	 * with cmi5Connector::getSessions()
 	 * @param mixed $sessionID - the session id
 	 * @param mixed $cmi5Id - cmi5 instance id
 	 * @return session

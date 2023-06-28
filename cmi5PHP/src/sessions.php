@@ -26,28 +26,14 @@ class Session {
   // Properties
   //$id is session id
   public $id, $tenantname, $tenantId, $registrationsCoursesAusId, $lmsid, $firstlaunch, $lastlaunch, 
-  $progress = [], $auid, $aulaunchurl, $launchurl, 
-  $completed_passed, $grade, $registrationid, $lrscode, 
+  $progress, $auid, $aulaunchurl, $launchurl, 
+  $grade, $registrationid, $lrscode, 
   $createdAt, $updatedAt, $registrationCourseAusId, 
   $code, $lastRequestTime, $launchTokenId, $launchMode, $masteryScore, 
   $contextTemplate, $isLaunched, $isInitialized, $initializedAt, $isCompleted, 
-  $isPassed, $isFailed, $isTerminated, $isAbandoned, $courseid;
+  $isPassed, $isFailed, $isTerminated, $isAbandoned, $courseid, $completed, $passed, $inprogress;
 
-
-  //Why did I ake these arrays? they should just be bools
-  public $completed, $passed, $inprogress = true | false;
-  //public $passed = array('finished'=> true|false, 'info' =>"");
-  //public $inProgress = array('finished'=> true|false, 'info' =>"");
-
-  // Methods
-  function set_name($name) {
-    $this->name = $name;
-  }
-  function get_name() {
-    return $this->name;
-  }
-
-//Constructs sessionss. Is fed array and where array key matches property, sets the property.  
+//Constructs sessions. Is fed array and where array key matches property, sets the property.  
 function __construct($statement){
 
   foreach($statement as $key => $value){
